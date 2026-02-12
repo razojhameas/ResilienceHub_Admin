@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements | Admin</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #111111;
+            --border: #e5e5e5;
+            --accent: #000000;
+            --secondary: #717171;
+            --input-bg: #fafafa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background-color: #fcfcfc;
+            color: var(--text);
+            min-height: 100vh;
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.5;
+        }
+        
+        .container {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 50px;
+            width: 100%;
+            max-width: 750px;
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-weight: 800;
+            font-size: 32px;
+            letter-spacing: -1.5px;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            color: var(--secondary);
+            margin-bottom: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sheet-link {
+            margin-bottom: 40px;
+            padding: 15px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .sheet-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid var(--accent);
+        }
+        
+        .form-group {
+            margin-bottom: 32px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--secondary);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            font-size: 15px;
+            background-color: var(--input-bg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent);
+            background-color: var(--bg);
+            outline: none;
+        }
+
+        input:hover, textarea:hover {
+            border-color: #bcbcbc;
+        }
+        
+        textarea {
+            min-height: 120px;
+        }
+
+        /* Modern Toggle Switch Style */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-wrapper:hover {
+            background: var(--input-bg);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        
+        .datetime-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 15px;
+            margin-top: 50px;
+        }
+        
+        button {
+            padding: 20px;
+            border: 1px solid var(--accent);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 0;
+        }
+        
+        #generateBtn {
+            background: var(--accent);
+            color: #fff;
+        }
+        
+        #generateBtn:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+        
+        #clearBtn {
+            background: transparent;
+            color: var(--accent);
+        }
+        
+        #clearBtn:hover {
+            background: #f0f0f0;
+        }
+        
+        .result-section {
+            margin-top: 60px;
+            display: none;
+            border-top: 1px solid var(--border);
+            padding-top: 40px;
+            animation: slideUp 0.6s ease;
+        }
+        
+        .code-block {
+            background: #000;
+            color: #fff;
+            padding: 40px 30px;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 13px;
+            position: relative;
+            margin-top: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        .preview-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #fff;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .preview-content h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .preview-message {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            color: var(--secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-toast {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: none;
+            z-index: 100;
+        }
+        
+        @media (max-width: 600px) {
+            .datetime-group, .button-group { grid-template-columns: 1fr; }
+            .container { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Portal</h1>
+        <p class="subtitle">--- for resiliencehub announcement management</p>
+        
+        <div class="sheet-link">
+            Linked Database: <a href="https://docs.google.com/spreadsheets/d/1YIJlzm-O_6ivTCqjSQRd0fzrnFUEw3KB9od9ETDhDhM/edit" target="_blank">Google Sheets Archive</a>
+        </div>
+        
+        <form id="announcementForm">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="title" placeholder="Announcement subject" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Message Body</label>
+                <textarea id="content" placeholder="Enter detailed information..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Issuing Office</label>
+                <select id="author" required>
+                    <option value="Barangay LGU">Barangay LGU</option>
+                    <option value="Barangay Council">Barangay Council</option>
+                    <option value="Barangay DRRM">Barangay DRRM</option>
+                    <option value="Barangay Health Center">Barangay Health Center</option>
+                    <option value="SK Chairman">SK Chairman</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Venue / Location</label>
+                <input type="text" id="location" placeholder="e.g. Barangay Hall" required>
+            </div>
+            
+            <div class="datetime-group">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" id="time" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Priority Status</label>
+                <div class="toggle-wrapper" onclick="document.getElementById('urgent').click()">
+                    <span style="font-size: 13px; font-weight: 500;">Mark as Urgent</span>
+                    <label class="switch" onclick="event.stopPropagation()">
+                        <input type="checkbox" id="urgent">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" id="generateBtn">Generate Sheet Row</button>
+                <button type="button" id="clearBtn">Reset</button>
+            </div>
+        </form>
+        
+        <div class="preview-section" id="previewSection" style="display: none;">
+            <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #999; margin-bottom: 15px; letter-spacing: 1px;">Live Preview</div>
+            <div class="preview-content" id="previewContent"></div>
+            <div class="preview-message" id="previewMessage"></div>
+        </div>
+        
+        <div class="result-section" id="resultSection">
+            <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px;">Clipboard Ready Data</div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyAllData()">Copy Row</button>
+                <div id="sheetDataDisplay"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-toast" id="successToast">Data ready for Google Sheets</div>
+
+    <script>
+        // Set Default Date/Time
+        const now = new Date();
+        document.getElementById('date').value = now.toISOString().split('T')[0];
+        const nextHour = (now.getHours() + 1).toString().padStart(2, '0') + ':00';
+        document.getElementById('time').value = nextHour;
+
+        // Reset Form
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            document.getElementById('announcementForm').reset();
+            document.getElementById('previewSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            // Reset Date/Time defaults after clear
+            document.getElementById('date').value = now.toISOString().split('T')[0];
+            document.getElementById('time').value = nextHour;
+        });
+
+        // Live Preview Logic
+        const inputs = ['title', 'content', 'author', 'location', 'urgent', 'date', 'time'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', updateUI);
+        });
+
+        function updateUI() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const author = document.getElementById('author').value;
+            const location = document.getElementById('location').value;
+            const urgent = document.getElementById('urgent').checked;
+
+            if (title || content) {
+                document.getElementById('previewSection').style.display = 'block';
+                document.getElementById('previewContent').innerHTML = `
+                    <h3>${title || 'Untitled'} ${urgent ? '<span style="color:red; font-size:12px; vertical-align:middle; margin-left:10px;">[URGENT]</span>' : ''}</h3>
+                    <p style="font-size: 12px; color: #666; font-weight: 600;">${author} &middot; ${location || 'No Location'}</p>
+                `;
+                document.getElementById('previewMessage').innerText = content || '...';
+            } else {
+                document.getElementById('previewSection').style.display = 'none';
+            }
+        }
+
+        // Generate Data String
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const author = document.getElementById('author').value;
+            const location = document.getElementById('location').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const urgent = document.getElementById('urgent').checked;
+
+            if (!title || !content || !location) {
+                alert('Incomplete form. Please fill required fields.');
+                return;
+            }
+
+            const eventDate = new Date(date + 'T' + time);
+            const displayDate = eventDate.toLocaleString('en-US', {
+                month: 'long', day: 'numeric', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', hour12: true
+            }).replace(',', ' at');
+            
+            const fDate = eventDate.getFullYear() + '-' + 
+                          String(eventDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                          String(eventDate.getDate()).padStart(2, '0') + ' ' + 
+                          String(eventDate.getHours()).padStart(2, '0') + ':' + 
+                          String(eventDate.getMinutes()).padStart(2, '0');
+
+            const createdAt = new Date().toISOString();
+            
+            const rawData = [
+                title, displayDate, content.replace(/\n/g, " "), 
+                author, urgent ? 'TRUE' : 'FALSE', fDate, 
+                location, createdAt
+            ].join('\t');
+
+            window.formattedData = rawData;
+            document.getElementById('sheetDataDisplay').innerText = rawData;
+            document.getElementById('resultSection').style.display = 'block';
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function copyAllData() {
+            if (!window.formattedData) return;
+            navigator.clipboard.writeText(window.formattedData).then(() => {
+                const toast = document.getElementById('successToast');
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 2500);
+            });
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
